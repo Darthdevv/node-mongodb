@@ -60,8 +60,8 @@ export const getUser = async (req, res) => {
   }
 }
 
-export const loginUser = async () => { };
+export const loginUser = async () => {};
 
-export const updateUser = async () => { };
+export const updateUser = async () => {};
 
 export const deleteUser = async () => {};
