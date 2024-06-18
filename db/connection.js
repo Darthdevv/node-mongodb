@@ -1,19 +1,12 @@
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 
-// Connection URL
-const url = "mongodb://localhost:27017";
-const client = new MongoClient(url);
-
-// Database Name
-const dbName = 'carRental';
-
-export async function dbConnection() {
+const connectToMongoDB = async () => {
   try {
-    await client.connect();
-    console.log("Connected successfully to server ✅");
+    await mongoose.connect(process.env.MONGO_DB_URI);
+    console.log("connected to MongoDB sucessfully ✅");
   } catch (error) {
-    console.log("Error connecting to server 💥", error);
+    console.log(`Failed to connect to Mongo: ${error.message} ❌`);
   }
-}
+};
 
-export const db =  client.db(dbName);
+export default connectToMongoDB;
