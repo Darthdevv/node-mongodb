@@ -29,7 +29,7 @@ export const registerUser = async (req, res) => {
   }
 }
 
-export const getUsers = async (req, res) => {
+export const retreiveUsers = async (req, res) => {
   try {
     const users = await User.find({}).toArray();
 
@@ -43,7 +43,7 @@ export const getUsers = async (req, res) => {
   }
 }
 
-export const getUser = async (req, res) => {
+export const retreiveUser = async (req, res) => {
   try {
 
     const { _id: id } = req.params;
