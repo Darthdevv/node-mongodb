@@ -1,41 +1,26 @@
 import mongoose, { Schema } from "mongoose";
 
-const postSchema = new mongoose.Schema(
+const rentalSchema = new mongoose.Schema(
   {
-    title: {
-      type: "string",
-      required: true,
-    },
-    category: {
-      type: "string",
-      enum: [
-        "Agricuulture",
-        "Business",
-        "Education",
-        "Entertainment",
-        "Art",
-        "Investment",
-        "Uncategorized",
-        "Weather",
-      ],
-      message: "{VALUE} is not supported",
-    },
-    description: {
-      type: "string",
-      required: true,
-    },
-    creator: {
+    car: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Car",
+      required: true
     },
-    thumbnail: {
-      type: "string",
+    customer: {
+      type: Schema.Types.ObjectId,
+      ref: "Customer",
       required: true,
     },
+    rentalDate: {
+      type: Date,
+      default: Date.now
+    },
+    returnDate: { type: Date },
   },
   { timestamps: true }
 );
 
-const Post = mongoose.model("Post", postSchema);
+const Rental = mongoose.model("Rental", rentalSchema);
 
-export default Post;
+export default Rental;
