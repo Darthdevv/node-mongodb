@@ -1,4 +1,7 @@
 import Customer from "../models/customer.model.js";
+import jwt from 'jsonwebtoken';
+import appError from "../utils/appError.js";
+import bcrypt from 'bcryptjs';
 
 export const registerCustomer = async (req, res) => {
   try {
@@ -12,10 +15,21 @@ export const registerCustomer = async (req, res) => {
 
     if (doesEmailExist) return res.status(409).json("email already exists");
 
+    if (password.trim().length < 8) {
+      return next(
+        new appError("Password must be at least 8 characters"),
+        400
+      );
+    }
+
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const newCustomer = await Customer.create({
       name,
       email,
-      password,
+      password : hashedPassword,
       phonenumber,
     });
 
@@ -58,7 +72,40 @@ export const retreiveCustomer = async (req, res) => {
   }
 };
 
-export const loginCustomer = async () => {};
+export const loginCustomer = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return next(new appError("Fill in all fields.", 400));
+    }
+
+    const newEmail = email.toLowerCase();
+
+    const customer = await Customer.findOne({ email: newEmail });
+
+    if (!customer) {
+      return next(new appError("Invalid credentials.", 400));
+    }
+
+    const comparePasswords = bcrypt.compare(password, customer.password);
+
+    if (!comparePasswords) {
+      return next(new appError("Invalid credentials.", 400));
+    }
+
+    const { _id: id, name } = customer;
+
+    const token = jwt.sign({ id, name }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "1d",
+    });
+
+    res.status(200).json({ token, id, name });
+  } catch (error) {
+    return next(
+      new appError(error)
+    );
+  }
+};
 
 export const updateCustomer = async () => {};
 
