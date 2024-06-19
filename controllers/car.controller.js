@@ -26,7 +26,7 @@ export const createCar = async (req, res) => {
 
 export const retreiveCars = async (req, res) => {
     try {
-    const cars = await Car.find();
+    const cars = await Car.find({});
 
     if (!cars) {
       return res.status(404).json({ message: "No cars found" });
@@ -40,8 +40,8 @@ export const retreiveCars = async (req, res) => {
 
 export const retreiveCar = async (req, res) => {
   try {
-    const { _id: id } = req.params;
-    const car = await Car.findOne({ id });
+    const { id } = req.params;
+    const car = await Car.findById( id );
 
     if (!car) {
       return res.status(404).json({ message: "Car not found" });

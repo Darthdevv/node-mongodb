@@ -59,8 +59,8 @@ export const retreiveCustomers = async (req, res) => {
 
 export const retreiveCustomer = async (req, res) => {
   try {
-    const { _id: id } = req.params;
-    const customer = await Customer.findOne({ id });
+    const {  id } = req.params;
+    const customer = await Customer.findById(id);
 
     if (!customer) {
       return res.status(404).json({ message: "Customer not found" });
@@ -107,6 +107,6 @@ export const loginCustomer = async (req, res, next) => {
   }
 };
 
-export const updateCustomer = async () => {};
+export const updateCustomer = async (req, res, next) => {};
 
-export const deleteCustomer = async () => {};
+export const deleteCustomer = async (req, res, next) => {};
