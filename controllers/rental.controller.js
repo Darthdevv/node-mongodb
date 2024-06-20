@@ -42,9 +42,34 @@ export const createRental = async (req, res, next) => {
   }
 };
 
-export const retreiveRentals = async (req, res) => {};
+export const retreiveRentals = async (req, res, next) => {
+  try {
+    const rentals = await Rental.find();
 
-export const retreiveRental = async (req, res) => {};
+    if (!rentals) {
+      return res.status(404).json({ message: "No rentals found" });
+    }
+
+    res.status(200).json({ rentals });
+  } catch (error) {
+    return next(new appError(error));
+  }
+};
+
+export const retreiveRental = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const rental = await Rental.findById(id);
+
+    if (!rental) {
+      return res.status(404).json({ message: "Rental not found" });
+    }
+
+    res.status(200).json({ rental });
+  } catch (error) {
+    return next(new appError(error));
+  }
+};
 
 export const updateRental = async (req, res) => {};
 
