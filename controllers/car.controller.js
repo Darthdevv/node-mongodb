@@ -122,7 +122,32 @@ export const retreiveAvailableOrRentedByModelCars = async (req, res, next) => {
   }
 };
 
-export const updateCar = async (req, res) => {};
+export const updateCar = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const { name, model, rentalStatus } = req.body;
+
+    if (!name || !model || !rentalStatus) {
+      return res.status(400).jsonn("Please fill all fields.");
+    }
+
+    const updatedCar = await Car.findByIdAndUpdate(id, {
+      name,
+      model,
+      rentalStatus
+    });
+
+    if (!updatedCar) {
+      return res.status(400).json("failed to update this car.");
+    }
+
+    res.status(200).json({ updatedCar });
+
+  } catch (error) {
+    return next(new appError(error));
+  }
+};
 
 export const deleteCar = async (req, res, next) => {
   try {
