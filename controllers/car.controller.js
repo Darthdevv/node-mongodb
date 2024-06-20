@@ -1,4 +1,5 @@
 import Car from "../models/car.model.js";
+import appError from "../utils/appError.js";
 
 export const createCar = async (req, res) => {
   try {
@@ -57,12 +58,31 @@ export const retreiveCarByModel = async (req, res, next) => {
   try {
     const { model } = req.query;
     console.log(model);
-    const carsByModels = await Car.find({ model }  );
+    const carsByModels = await Car.find({ model });
+
+    if (!carsByModels) {
+      return next(new appError("No cars were found by that model", 404));
+    }
+
     res.status(200).json({ carsByModels });
   } catch (error) {
-    res.status(500).send(error);
+    return next(new appError(error));
   }
 }
+
+export const retreiveAvailableCarsByModel = async (req, res, next) => {
+  const { model } = req.query;
+  try {
+    const carsAvailableByModel = await Car.find({ model, rentalStatus: "available" });
+
+    if (!carsAvailableByModel) {
+      return next(new appError("No cars were found available by that model", 404));
+    }
+    res.status(200).json({ carsAvailableByModel });
+  } catch (error) {
+    return next(new appError(error));
+  }
+};
 
 export const updateCar = async (req, res) => {};
 
