@@ -124,4 +124,18 @@ export const retreiveAvailableOrRentedByModelCars = async (req, res, next) => {
 
 export const updateCar = async (req, res) => {};
 
-export const deleteCar = async (req, res) => {};
+export const deleteCar = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return next(new appError("Post unavailable.", 400));
+    }
+
+    await Car.findByIdAndDelete(id);
+
+    res.status(204).json({ message : "Car deleted successfully."});
+  } catch (error) {
+    return next(new appError(error));
+  }
+};
