@@ -57,7 +57,7 @@ export const retreiveCar = async (req, res) => {
 export const retreiveCarByModel = async (req, res, next) => {
   try {
     const { model } = req.query;
-    console.log(model);
+
     const carsByModels = await Car.find({ model });
 
     if (!carsByModels) {
