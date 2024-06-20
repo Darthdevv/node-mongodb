@@ -136,7 +136,7 @@ export const updateCar = async (req, res, next) => {
       name,
       model,
       rentalStatus
-    });
+    }, {new: true});
 
     if (!updatedCar) {
       return res.status(400).json("failed to update this car.");
@@ -154,7 +154,7 @@ export const deleteCar = async (req, res, next) => {
     const { id } = req.params;
 
     if (!id) {
-      return next(new appError("Post unavailable.", 400));
+      return next(new appError("Car unavailable.", 400));
     }
 
     await Car.findByIdAndDelete(id);

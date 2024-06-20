@@ -71,6 +71,62 @@ export const retreiveRental = async (req, res, next) => {
   }
 };
 
-export const updateRental = async (req, res) => {};
+export const updateRental = async (req, res, next) => {
+  try {
+    let updatedRental;
+    const { id } = req.params;
 
-export const deleteRental = async (req, res) => {};
+    let { carId, rentalDate, returnDate } = req.body;
+
+    if (!rentalDate || !returnDate) {
+      return next(new appError("Fill in all fields.", 400));
+    }
+
+    const rental = await Rental.findById(id);
+    console.log(rental.customer);
+    console.log(req.customer.id);
+
+    if (rental.customer == req.customer.id) {
+      updatedRental = await Rental.findByIdAndUpdate(
+        id,
+        {
+          car: carId,
+          customer: req.customer.id,
+          rentalDate,
+          returnDate,
+        },
+        { new: true }
+      );
+    }
+
+    if (!updatedRental) {
+      return res.status(400).json("failed to update this rental.");
+    }
+
+    res.status(200).json({ updatedRental });
+
+  } catch (error) {
+    return next(new appError(error));
+  }
+};
+
+export const deleteRental = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return next(new appError("Rental unavailable.", 400));
+    }
+
+    const rental = await Rental.findById(id);
+
+    if (rental.customer == req.customer.id) {
+      await Rental.findByIdAndDelete(id);
+    }
+
+    res.status(204).json({ message: "Rental deleted successfully." });
+
+  } catch (error) {
+    return next(new appError(error));
+  }
+};

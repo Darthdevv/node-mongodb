@@ -5,6 +5,6 @@ import authHandler from '../middlewares/auth.middleware.js'
 const router = Router();
 
 router.route("/").get(retreiveRentals).post(authHandler, createRental);
-router.route("/:id").get(retreiveRental).patch(updateRental).delete(deleteRental);
+router.route("/:id").get(retreiveRental).patch(authHandler, updateRental).delete(authHandler, deleteRental);
 
 export default router;
