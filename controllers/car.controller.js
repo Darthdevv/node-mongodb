@@ -53,6 +53,17 @@ export const retreiveCar = async (req, res) => {
   }
 };
 
+export const retreiveCarByModel = async (req, res, next) => {
+  try {
+    const { model } = req.query;
+    console.log(model);
+    const carsByModels = await Car.find({ model }  );
+    res.status(200).json({ carsByModels });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
 export const updateCar = async (req, res) => {};
 
 export const deleteCar = async (req, res) => {};
