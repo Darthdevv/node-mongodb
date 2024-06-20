@@ -84,6 +84,44 @@ export const retreiveAvailableCarsByModel = async (req, res, next) => {
   }
 };
 
+export const retreiveRentedOrSpecificModelCars = async (req, res, next) => {
+  const { model } = req.query;
+  try {
+    const cars = await Car.find({
+      $or: [{ rentalStatus: 'rented' }, { model }]
+    });
+
+    if (!cars) {
+      return next(new appError("No cars were found either rented or by that model", 404));
+    }
+    res.status(200).json({ cars });
+
+  } catch (error) {
+    return next(new appError(error));
+  }
+};
+
+export const retreiveAvailableOrRentedByModelCars = async (req, res, next) => {
+  const { model } = req.query;
+  try {
+    const cars = await Car.find({
+      $or: [
+        { model, rentalStatus: 'available' },
+        { model, rentalStatus: 'rented' }
+      ]
+    });
+
+    if (!cars) {
+      return next(new appError("No cars were found either rented or available by that model", 404));
+    }
+
+    res.status(200).json({ cars });
+
+  } catch (error) {
+    return next(new appError(error));
+  }
+};
+
 export const updateCar = async (req, res) => {};
 
 export const deleteCar = async (req, res) => {};
