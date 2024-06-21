@@ -45,7 +45,7 @@ export const registerCustomer = async (req, res) => {
 
 export const retreiveCustomers = async (req, res) => {
   try {
-    const customers = await Customer.find();
+    const customers = await Customer.find().select("-password");
 
     if (!customers) {
       return res.status(404).json({ message: "No customers found" });
