@@ -109,7 +109,49 @@ export const loginCustomer = async (req, res, next) => {
 
 export const updateCustomer = async (req, res, next) => {
   try {
-    
+
+    const { id } = req.params;
+
+    const { name, email, currentPassword, newPassword, phonenumber } = req.body;
+
+    if (!name || !currentPassword || !newPassword || !email || !phonenumber) {
+      return res.status(400).json("please fill all fields");
+    }
+
+    //get user from database
+    const customer = await Customer.findById(id);
+    if (!customer) {
+      return next(new appError("Customer not found.", 404));
+    }
+
+    //make sure that the email does not already exist
+    const emailExists = await Customer.findOne({ email });
+
+    if (emailExists && emailExists._id != req.customer.id) {
+      return next(new appError("Email already exists.", 409));
+    }
+    //compare current password to database password
+    const validateUserPassword = await bcrypt.compare(
+      currentPassword,
+      customer.password
+    );
+    if (!validateUserPassword) {
+      return next(new appError("Invalid current password.", 400));
+    }
+
+    //hash new password
+    const salt = await bcrypt.genSalt(10);
+    const newHashedPassword = await bcrypt.hash(newPassword, salt);
+
+    //update user info on database
+    const updatedUser = await Customer.findByIdAndUpdate(
+      id,
+      { name, email, password: newHashedPassword, phonenumber },
+      { new: true }
+    );
+
+    res.status(200).send(updatedUser);
+
   } catch (error) {
     return next(new appError(error));
   }
@@ -117,7 +159,19 @@ export const updateCustomer = async (req, res, next) => {
 
 export const deleteCustomer = async (req, res, next) => {
   try {
-    
+    const { id } = req.params;
+
+    if (!id) {
+      return next(new appError("Customer unavailable.", 400));
+    }
+
+    const customer = await Customer.findById(id);
+
+    if (customer._id == req.customer.id) {
+      await Customer.findByIdAndDelete(id);
+    }
+
+    res.status(204).json({ message: "Customer deleted successfully." });
   } catch (error) {
     return next(new appError(error));
   }

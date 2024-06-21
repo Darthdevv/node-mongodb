@@ -83,8 +83,6 @@ export const updateRental = async (req, res, next) => {
     }
 
     const rental = await Rental.findById(id);
-    console.log(rental.customer);
-    console.log(req.customer.id);
 
     if (rental.customer == req.customer.id) {
       updatedRental = await Rental.findByIdAndUpdate(
