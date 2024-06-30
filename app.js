@@ -8,7 +8,7 @@ import { errorHandler } from './middlewares/error.middleware.js';
 // import dotenv from 'dotenv';
 import cors from 'cors';
 
-dotenv.config();
+// dotenv.config();
 const app = express();
 const PORT = 5000 || 8000;
 app.use(cors());
