@@ -6,6 +6,7 @@ import connectToMongoDB from './db/connection.js';
 import { notFound } from './middlewares/error.middleware.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use('/api/cars', carRoutes);
 app.use('/api/rentals', rentalRoutes);
 app.use(notFound);
 app.use(errorHandler);
+app.use(cors());
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
