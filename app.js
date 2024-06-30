@@ -5,12 +5,12 @@ import rentalRoutes from './routes/rental.routes.js'
 import connectToMongoDB from './db/connection.js';
 import { notFound } from './middlewares/error.middleware.js';
 import { errorHandler } from './middlewares/error.middleware.js';
-// import dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import cors from 'cors';
 
-// dotenv.config();
+dotenv.config();
 const app = express();
-const PORT = 5000 || 8000;
+const PORT = process.env.PORT || 8000;
 app.use(cors());
 
 app.use(express.json());
