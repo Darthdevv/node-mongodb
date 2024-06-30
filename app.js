@@ -9,6 +9,9 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+dotenv.config();
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -17,10 +20,6 @@ app.use('/api/cars', carRoutes);
 app.use('/api/rentals', rentalRoutes);
 app.use(notFound);
 app.use(errorHandler);
-app.use(cors());
-
-dotenv.config();
-const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   connectToMongoDB();
