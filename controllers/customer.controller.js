@@ -95,9 +95,13 @@ export const loginCustomer = async (req, res, next) => {
 
     const { _id: id, name } = customer;
 
-    const token = jwt.sign({ id, name }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "1d",
-    });
+    const token = jwt.sign(
+      { id, name },
+      "ckgojXRPmMnD3XxAKvOe6nMolEWyu6s3Ge/aWR43TrI=",
+      {
+        expiresIn: "1d",
+      }
+    );
 
     res.status(200).json({ token, id, name });
   } catch (error) {
